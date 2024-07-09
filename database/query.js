@@ -20,9 +20,9 @@ function connectDatabase () {
 			console.error('Error connecting to PostgreSQL database', err);
 		});
 
-	client.query(`DROP TABLE "user" CASCADE`)
-	client.query(`DROP TABLE organisation CASCADE`)
-	client.query(`DROP TABLE userorganisation`)
+	// client.query(`DROP TABLE "user" CASCADE`)
+	// client.query(`DROP TABLE organisation CASCADE`)
+	// client.query(`DROP TABLE userorganisation`)
 
 	client.query(`CREATE TABLE "user"(
 		userId VARCHAR(255) UNIQUE,
@@ -153,6 +153,10 @@ function getUserOrgsId (id) {
 			}
 		})
 	})
+}
+
+function get(argument) {
+	// body...
 }
 
 
