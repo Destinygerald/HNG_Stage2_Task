@@ -21,15 +21,20 @@ async function comparePassword (password, hashedPassword) {
 	return match;
 }
 
+
+
 async function jwtSign (info) {
 	const jwtToken = await jwt.sign(info, process.env.SECRET)
 	return jwtToken
 }
 
+
+
 async function jwtVerify (token) {
 	const result = await jwt.verify(token, process.env.SECRET)
 	return result;
 }
+
 
 function ValidateField (value, regex, field, message) {
 	try {
@@ -54,8 +59,8 @@ function ValidateField (value, regex, field, message) {
 
 
 module.exports = {
-	hashPassword,
 	comparePassword,
+	hashPassword,
 	jwtSign,
 	jwtVerify,
 	ValidateField

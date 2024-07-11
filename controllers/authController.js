@@ -74,7 +74,7 @@ async function login (req, res) {
 
 		const db_query = await getUserByEmail(email)
 
-		if ( !db_query.rows[0] ) {
+		if ( !db_query || !db_query.rows[0] ) {
 			return res.status(401).json({
 				status: 'Bad request',
 				message: "Authentication failed"
@@ -83,7 +83,7 @@ async function login (req, res) {
 		
 		const passwordMatch = comparePassword(password, db_query.rows[0].hashedPassword)
 		
-		if ( !passwordMatch ) {
+		if (!passwordMatch) {
 			return res.status(401).json({
 				status: 'Bad request',
 				message: "Authentication failed"
@@ -93,15 +93,13 @@ async function login (req, res) {
 		const { hashedPassword,...userinfo } = db_query.rows[0]
 		const accessToken = await jwtSign(userinfo)
 
-		if (!accessToken) {
-			return res.status(500).json({
+		if (!accessToken || accessToken == undefined) {
+			return res.status(404).json({
 				message: "Jwt error"
 			})
 		}
 
-		res.cookie('accessToken', accessToken)
-
-		return res.status(200).json({
+		return res.cookie('accessToken', accessToken).status(200).json({
 			status: 'success',
 			message: 'Login successful',
 			data: {

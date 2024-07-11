@@ -1,4 +1,4 @@
-const { getUser, getUserOrgsId, addOrganisation, addToOrganisation, getOrganisation, test } = require('../database/query.js')
+const { getUser, getUserOrgsId, getUserFromOrganisation, addOrganisation, addToOrganisation, getOrganisation, test } = require('../database/query.js')
 const { jwtVerify, ValidateField } = require('../helperFunctions.js')
 const { v4: uuidV4 } = require('uuid')
 
@@ -15,7 +15,7 @@ async function protectedGetUser(req, res) {
 			return res.status(401).json({
 				message: "Invalid credentials"
 			})
-		} 
+		}
 
 		const db_query = await getUser(id)
 
@@ -178,8 +178,21 @@ async function addUserToOrginasation (req, res) {
 		const { userId } = req.body
 		const { orgId } = req.params
 
+		//check if the user is already on the organisation
+
+		const db_query = await getUserFromOrganisation(orgId, userId)
+
+		if (db_query.rows[0]) {
+			return res.status(409).json({
+				status: "Already exist",
+				message: "User is already on this organisation"
+			})
+		}
+
 		const db_insert = await addToOrganisation(userId, orgId)
-		console.log(db_insert)
+
+
+		console.log(db_query.rows[0])
 	
 		return res.status(200).json({
 			status: "success",

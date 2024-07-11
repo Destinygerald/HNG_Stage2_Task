@@ -155,8 +155,16 @@ function getUserOrgsId (id) {
 	})
 }
 
-function get(argument) {
-	// body...
+function getUserFromOrganisation(orgId, userId) {
+	return new Promise((resolve, reject) => {
+		client.query(`SELECT userid FROM userorganisation WHERE userIdTag=$1 && orgIdTag=$2`, [userId, orgId], (err, result) => {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(result)
+			}
+		})
+	})
 }
 
 
@@ -205,6 +213,7 @@ function test () {
 
 
 module.exports = {
+	client,
 	connectDatabase,
 	addUser,
 	getUser,
@@ -214,5 +223,6 @@ module.exports = {
 	addToOrganisation,
 	getUserOrgsId,
 	getOrganisation,
+	getUserFromOrganisation,
 	test
 }
